@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#this was used to create a target file for HybPiper. You want seqkit and fasta_pretty from fasta_tools
+
+rm -r *split/
+rm all_genes.txt
+
+
+#get names of genes. based on my field "ID=", gene names between "=" and "." in my file
+cat myfasta.fas | grep -F '>' | cut -d '=' -f 2 | cut -d "." -f 1 | uniq | sort >> all_genes.txt
+#change header names to avoid ordering by exons. This is meaningful for genes on antisense
+cat myfasta.fas | cut -f1 -d ":" > myfasta-newnames.fas
+#split all sequences by head
+seqkit split -i myfasta-newnames.fas;
+#concatenate by head, gene by gene. That's what the list's for
+cd myfasta-newnames.fas.split;
+while read gene; do
+#cat just first head
+cat *"$gene"* | head -1 | cut -d "." -f 1 > "$gene".txt;
+#take rest of sequences
+cat *"$gene"* | grep -v ">" >> "$gene".txt;
+#align and make pretty
+fasta_pretty "$gene".txt > "$gene"_aligned.txt
+done < ../all_genes.txt
+cd ../
+#concatenate everything together for a target file
+cat myfasta-newnames.fas.split/*_aligned.txt > target_file_from_exons.fas
+
+#cleanup
+rm -r *split/
+rm all_genes.txt myfasta-newnames.fas
