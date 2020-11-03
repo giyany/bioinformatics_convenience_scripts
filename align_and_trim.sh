@@ -49,13 +49,13 @@ while read ind; do
 	bowtie2 --very-sensitive-local -x /media/computer/097c7584-78ef-4295-907e-df3c187190c3/Science/Data/Refgenome/Tfas_bowtieindex -1 "$ind"_R1_paired.fq -2 "$ind"_R2_paired.fq -S "$ind"_aligned_Tfasc.sam -p 14;
 	#collect stats on alignment
 	samtools stats "$ind"_aligned_Tfasc.sam > "$ind"_aligned_Tfasc_sam_stats.txt;
-	#covert to bam, keep uniquely mapped reads only, filter by mq>10 & sort
+	#convert to bam, keep uniquely mapped reads only, filter by mq>10 & sort
 	samtools view -h -b -q 10 "$ind"_aligned_Tfasc.sam | samtools sort -o "$ind"_asmq10.bam;
 	#add read group info. This is specific to my data, other users would want to modify
 	java -jar ~/Programs/picard.jar AddOrReplaceReadGroups I="$ind"_asmq10.bam o="$ind"_asmq10rg.bam RGLB=WGD RGPL=illumina RGPU=Lib1 RGSM="$ind" RGID="$ind";
-	#mark duplicates. noticed duplicates here are MARKED NOT REMOVED
+	#mark duplicates. notice duplicates here are MARKED NOT REMOVED
 	java -jar ~/Programs/picard.jar MarkDuplicates I="$ind"_asmq10rg.bam o="$ind"_asmq10rgd.bam M="$ind"_dup_metrics.txt;
-	#redirect info about alignment
+	#redirect info about alignment into txt report
 	printf "%s\t" "$ind" >> alignment_report.txt;
 	awk 'BEGIN {ORS="\t"} NR==10 {print $3} NR==14 {print $4} NR==15 {print $6} NR==32 {print $4}' reports/"$ind"_aligned_Tfasc_sam_stats.txt >> alignment_report.txt;
 	samtools view -F 4 "$ind"_aligned_Tfasc.sam | grep -v "XS:" | wc -l >> alignment_report.txt;
@@ -66,6 +66,6 @@ while read ind; do
 	mv "$ind"_dup_metrics.txt reports;
 done < $indlist
 
-# Call variants with freebayes, example (code from cluster scripts)
+# Call variants with freebayes, example (code for cluster computing)
 
-# TEMPDIR=/gpfs/data/fs71400/yardeni/Angio353/vcfcall_Ananas/tempdir freebayes-parallel < /gpfs/data/fs71400/yardeni/Ananas_resources/Ananas.target.regions.10k.by.cov.LG.only 32 \ --report-monomorphic --use-best-n-alleles 120 --limit-coverage 600 -g 50000 -f pineapple.20150427,fasta --populations popfile.txt *.bam > Angio353vsAnanas_Tillandsia_samples_wmonosites_raw.vcf
+# TEMPDIR=/gpfs/data/fs71400/yardeni/Angio353/vcfcall_Ananas/tempdir freebayes-parallel < /gpfs/data/Ananas_resources/Ananas.target.regions.10k.by.cov.LG.only 32 \ --report-monomorphic --use-best-n-alleles 120 --limit-coverage 600 -g 50000 -f pineapple.20150427ץfasta --populations popfile.txt *.bam > Angio353vsAnanas_wmonosites_raw.vcf
