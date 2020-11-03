@@ -17,7 +17,7 @@ with open(dict_file,"r") as data:
         Sample_dict[key]=value
 #print(Sample_dict)
 
-#file to chance names in
+#file to chanעe names in
 change_file=open(sys.argv[1],"r")
 tree_string=change_file.read()
 #print(tree_string)
