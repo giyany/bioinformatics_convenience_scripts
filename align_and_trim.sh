@@ -3,7 +3,7 @@
 indlist=$1
 
 #preparing file for report
-printf "%s\t" "ind" "reads_paired" "aligned_read" "mapped_paired" "AVG_qual" "uniquely mapped" "surviving MQ" "duplication per"> alignment_report.txt
+printf "%s\t" "ind" "reads_paired" "aligned_reads" "mapped_paired" "AVG_qual" "uniquely_mapped" "surviving_QC" "duplication_per"> alignment_report.txt
 echo " " >> alignment_report.txt;
 
 #trim
