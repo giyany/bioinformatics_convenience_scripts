@@ -1,8 +1,8 @@
 #!/bin/bash
+# given a list of bam filenames (aligned and quality trimmed) [-a] and a bed with target coordinates [-b], 
+#use samtools and bedtools intersect to look at % of reads mapped to target
 
 usage() { echo "Usage: $0 [-a <list of aligned bams files>] [-b <bed file of targets>]" 1>&2; exit 1; }
-
-
 
 
 while getopts ":a:b:" opt; do
