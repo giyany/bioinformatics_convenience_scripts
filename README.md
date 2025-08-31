@@ -1,8 +1,9 @@
 # bioinformatics_convenience_scripts
-Messy, non-generic, untested, worked at some point. 
-
+Useful scripts and bits for genomic analysis and steamlining
 ```
-A couple of one-liners
+
+
+One-liners:
 ```
 ### Delete VCFs with no records in current dir
 ##find the minimum nr of lines and assign; remove all VCFs with the min nr of lines
